@@ -1,15 +1,6 @@
 /// <reference path="../typings/index.d.ts" />
 
-
-class main {
-	constructor() {
-
-
-	}
-
-	public canvas() {
-
-	}
-
-
-}
+$(window).on('load', () => {
+  let visualizer = GLAudioVisualizer.Main.instance;
+  visualizer.init();
+});

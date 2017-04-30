@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "outFile":"./js/visualizer.js",
+    "sourceMap": true,
     "module": "commonjs",
     "declaration": false,
     "noImplicitAny": false,
@@ -23,5 +25,5 @@
     "placeOpenBraceOnNewLineForFunctions": true,
     "placeOpenBraceOnNewLineForControlBlocks": true
   },
-  "compileOnSave": false,
+  "compileOnSave": false
 }
