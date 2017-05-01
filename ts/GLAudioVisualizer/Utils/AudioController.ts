@@ -34,9 +34,12 @@ namespace GLAudioVisualizer {
 
       // Decode asynchronously
       request.onload = () => {
-        this.context.decodeAudioData(request.response, (buffer: string) => {
+        let a: DecodeSuccessCallback;
+        this.context.decodeAudioData(request.response, (buffer) => {
           onLoad(buffer);
-        }, onError);
+        }, () => {
+          onError(new ErrorEvent(''));
+        });
       };
 
       request.send();
@@ -46,7 +49,14 @@ namespace GLAudioVisualizer {
     public playSound(buffer: ArrayBuffer) : void {
       this.source = this.context.createBufferSource(); // creates a sound source
       this.source.buffer = buffer;                    // tell the source which sound to play
-      this.source.connect(this.context.destination);       // connect the source to the context's destination (the speakers)
+      // this.source.connect(this.context.destination);       // connect the source to the context's destination (the speakers)
+      // Create a gain node.
+      let gainNode = this.context.createGain();
+      // Connect the source to the gain node.
+      this.source.connect(gainNode);
+      // Connect the gain node to the destination.
+      gainNode.connect(this.context.destination);
+      gainNode.gain.value = 0.5;
       this.source.start(0);                           // play the source now
                                                  // note: on older systems, may have to use deprecated noteOn(time);
     }
