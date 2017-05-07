@@ -1,19 +1,10 @@
 
 namespace GLAudioVisualizer {
-  const CanvasElemID: String = 'canvas-main';
   export class Main {
 
-    private static __instance: Main;
-
-    public static get instance() : Main {
-      if (!Main.__instance) {
-        Main.__instance = new Main();
-      }
-
-      return Main.__instance;
-    }
-
-    private constructor() {
+    private _canvasWrapper: HTMLElement;
+    public constructor(canvasWrapper: HTMLElement) {
+      this._canvasWrapper = canvasWrapper;
     }
 
     private _renderer: THREE.WebGLRenderer;
@@ -26,9 +17,12 @@ namespace GLAudioVisualizer {
 
     private _scene: THREE.Scene;
 
-    public meshes: Array<THREE.Object3D>;
+    public meshes1: Array<THREE.Object3D>;
+    public meshes2: Array<THREE.Object3D>;
+    public materials: Array<THREE.Material>;
     public meshWrapper: THREE.Object3D;
 
+    public audioController: AudioController;
     public stats: any;
 
     public init() : void {
@@ -39,7 +33,7 @@ namespace GLAudioVisualizer {
       this._renderer = new THREE.WebGLRenderer();
       this._renderer.setClearColor( 0x000011 );
       this._renderer.setSize( width, height );
-      $('#canvas-wrapper').append( this._renderer.domElement );
+      $(this._canvasWrapper).append( this._renderer.domElement );
 
       // init camera
       let fov    = 60;
@@ -47,31 +41,45 @@ namespace GLAudioVisualizer {
       let near   = 1;
       let far    = 1000;
       this._camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-      this._camera.position.set( 0, 0, 50 );
+      this._camera.position.set( 0, 10.0, 20 + 50 * (1 / aspect));
       this._camera['onResized'] = (w: number, h: number) => {
-        this._camera.aspect = w / h;
+        aspect = w / h;
+        this._camera.aspect = aspect;
+
+        this._camera.position.set( 0, 10.0, 20 + 50 * (1 / aspect));
         this._camera.updateProjectionMatrix();
       };
-      this._camera.position.setY(10.0);
 
       //init scene
       this._scene = new THREE.Scene();
 
       //init light
-      let directionalLight = new THREE.AmbientLight( 0xffffff );
-      // directionalLight.position.set( 0, 0.7, 0.7 );
+
+    let ambilLight = new THREE.AmbientLight( 0x333333 );
+      this._scene.add( ambilLight );
+
+      let directionalLight = new THREE.DirectionalLight( 0xffffff );
+      directionalLight.intensity = 2.0;
+      directionalLight.position.set( 0, 0.7, 0.7 );
       this._scene.add( directionalLight );
 
       //init object
-      this.meshes = new Array();
+      this.meshes1 = new Array();
+      this.meshes2 = new Array();
+      this.materials = new Array();
+      let length = 128;
       this.meshWrapper = new THREE.Object3D();
-      for (let i = 0; i < 128; i++) {
-        let geometry = new THREE.CubeGeometry( 0.5, 1, 2 );
-        let colorRGB = Color.HSVtoRGB(i / 128, 0.5, 0.5);
-        let color = new THREE.Color('hsl(' + (i / 128 * 360) + ', 100%, 50%)').getHex();
-        let material = new THREE.MeshPhongMaterial( { color: color } );
-        this.meshes[i] = new THREE.Mesh( geometry, material );
-        this.meshes[i].position.set(i * 0.5  - 64 / 2, -30, 0);
+      let meshW = 0.5;
+      for (let i = 0; i < length; i++) {
+        let geometry = new THREE.CubeGeometry( meshW, 1, 2 );
+        let material1 = new THREE.MeshPhongMaterial({color: '#FFFFFF'});
+        let material2 = new THREE.MeshPhongMaterial();
+        this.meshes1[i] = new THREE.Mesh( geometry, material1 );
+        let geometry2 = new THREE.CubeGeometry( meshW, 1, 2 );
+        this.meshes2[i] = new THREE.Mesh( geometry2, material2 );
+        this.materials[i] = material2;
+        this.meshes1[i].position.set(i * meshW  - (length * meshW  / 2), 0, 0);
+        this.meshes2[i].position.set(i * meshW  - (length * meshW  / 2), 0, +2);
         // mesh['onUpdate'] = () => {
         //   mesh.rotation.set(
         //     0,
@@ -79,35 +87,33 @@ namespace GLAudioVisualizer {
         //     mesh.rotation.z + .01
         //   );
         // };
-        this.meshWrapper.add( this.meshes[i]);
+        this.meshWrapper.add( this.meshes1[i]);
+        this.meshWrapper.add( this.meshes2[i]);
       }
       this._scene.add(this.meshWrapper);
 
-      //add glid line
+      //add grid line
 
-      let interval = 2;
-      let max = 100;
-      for (let i = 0; i < max; i++) {
+      let interval = 5;
+      let max = 20;
+      for (let i = 0; i < max + 1; i++) {
           //頂点座標の追加
           let geometry = new THREE.Geometry();
           geometry.vertices.push( new THREE.Vector3( -interval * max / 2, 0, i * interval - (interval * max / 2)));
           geometry.vertices.push( new THREE.Vector3( +interval * max / 2, 0,  i * interval - (interval * max / 2)));
 
           //線オブジェクトの生成
-          let line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0x000099} ) );
-
+          let line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0x000077} ) );
           //sceneにlineを追加
           this.meshWrapper.add( line );
       }
-      for (let i = 0; i < max; i++) {
+      for (let i = 0; i < max + 1; i++) {
           //頂点座標の追加
           let geometry = new THREE.Geometry();
           geometry.vertices.push( new THREE.Vector3(i * interval - (interval * max / 2), 0, -interval * max / 2));
           geometry.vertices.push( new THREE.Vector3(i * interval - (interval * max / 2), 0, +interval * max / 2));
-
           //線オブジェクトの生成
-          let line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0x000099} ) );
-
+          let line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0x000077} ) );
           //sceneにlineを追加
           this.meshWrapper.add( line );
       }
@@ -115,23 +121,28 @@ namespace GLAudioVisualizer {
       this.setResizeEvent();
       this.doUpdate();
 
-      let soundUrl = 'sound/electric-mantis-daybreak.mp3';
-      AudioController.instance.loadSound(soundUrl, (buffer) => {
-         AudioController.instance.playSound(buffer);
-
-        let context = AudioController.instance.context;
-        let src = AudioController.instance.source;
+      let soundUrl = 'sound/EzaOne - Supernova.mp3';
+      this.audioController = new AudioController();
+      this.audioController.loadSound(soundUrl, (buffer) => {
+       this.audioController.setBuffer(buffer);
+        let context = this.audioController.context;
         let analyser = context.createAnalyser();
         analyser.minDecibels = -100;
         analyser.maxDecibels = -20;
         this.analyser = analyser;
-        src.connect(analyser);
         analyser.fftSize = 1024;
-        analyser.smoothingTimeConstant = 0.8;
+        analyser.smoothingTimeConstant = 0.7;
       });
+      this.audioController.onPlaying = () => {
+        let src = this.audioController.source;
+        src.connect(this.analyser);
+      };
 
       // Stats
-      this.stats = new Stats();
+      /* tslint:disable */
+      // tslint:disable-next-line <optional rule identifier>
+      this.stats = new Stats(); // tslint:disable-line
+      /* tslint:enable */
       document.body.appendChild( this.stats.dom );
     }
     private analyser: any;
@@ -184,15 +195,26 @@ namespace GLAudioVisualizer {
       if (!this.analyser) {
         return;
       }
-      let count = this.meshes.length;
+      let count = this.meshes1.length;
       let data = new Uint8Array(count);
+      this.analyser.getByteTimeDomainData(data);
+      for (let i = 0; i < count; ++i) {
+        // console.log('[' + i + ']:' + data[i]);
+        let h = data[i] * 0.1 + 0.01;
+        this.meshes1[i].scale.setY(h);
+      }
+
+      data = new Uint8Array(count);
       this.analyser.getByteFrequencyData(data);
       for (let i = 0; i < count; ++i) {
         // console.log('[' + i + ']:' + data[i]);
-        let h = data[i] * (data[i] / 100)  * 0.05 + 0.01;
-        this.meshes[i].scale.setY(h);
-        this.meshes[i].position.setY(h / 2);
+        let h = data[i] * (data[i] / 100)  * 0.08 + 0.01;
+        this.meshes2[i].scale.setY(h);
+
+        let color = new THREE.Color('hsl(' + (i / count * 360) + ', 100%, 50%)').getHex();
+        (Object)(this.materials[i]).color.set(color);
       }
+
       this.meshWrapper.rotation.set(
         0,
         this.meshWrapper.rotation.y + (delta / 10000),
