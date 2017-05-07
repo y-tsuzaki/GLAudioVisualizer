@@ -1,0 +1,205 @@
+//http://qiita.com/junkjunctions/items/5938a6d706548cd91218
+
+{
+  // for 3.11.0
+
+  // 期待
+  // https://github.com/palantir/tslint-react
+
+  "rules": {
+    // TypeScript Specific
+
+    // アクセス修飾子強制 ES2015との親和性を高めるため無効
+    "member-access": false,
+
+    // クラスのメンバ順を強制
+    "member-ordering": true,
+
+    // any禁止
+    "no-any": false,
+
+    // 型推論に頼らない 頼る
+    // どうもtypedefとの兼ね合いがあるらしい issue上がってる
+    // https://github.com/palantir/tslint/issues/711
+    "no-inferrable-types": false,
+
+    // module禁止
+    "no-internal-module": true,
+
+    // namespace禁止
+    "no-namespace": false,
+
+    // <reference />禁止 さすがにそれはキツイでしょう 無効
+    "no-reference": false,
+
+    // importするときにvar宣言禁止
+    "no-var-requires": true,
+
+    // 型をきちんとつけさせる
+    "typedef": [true,
+      // 関数の戻り値
+      "call-signature",
+      // function文で宣言した関数
+      "parameter",
+      // arrow function 暗黙的に決定されるケースが大半なので無効
+      // "arrow-parameter",
+      // interface宣言
+      "property-declaration",
+      // 変数 基本的に宣言即代入するので型は暗黙的に決定されるため無効
+      // そうでないものも型がないとany扱いとなって怒られるので問題ない
+      // "variable-declaration",
+      // クラスのメンバ変数
+      "member-variable-declaration"
+    ],
+
+    // 型宣言周囲のスペース指定
+    "typedef-whitespace": [true, {
+      "call-signature": "noSpace",
+      // "index-signature": "space",
+      "parameter": "nospace",
+      "property-declaration": "nospace",
+      "variable-declaration": "nospace"
+    } ],
+
+    // Functionality
+    // 指定したオブジェクトの指定メソッドを禁止 無効
+    "ban": false,
+    // 中括弧をif/for/do/whileで必須
+    "curly": true,
+    // forin使うときにif文(ほぼhasOwnProperty用)必須
+    "forin": true,
+    // breakとかcontinueの絡みっぽい
+    "label-position": true,
+    "label-undefined": true,
+    // arguments.callee 禁止
+    "no-arg": true,
+    // bit演算子禁止
+    "no-bitwise": true,
+    // 条件式での代入を禁止
+    "no-conditional-assignment": true,
+    // 指定したconsole.xxx を禁止する 無効
+    "no-console": false,
+    // String Number Booleanへのアクセス禁止 使うことはまずない
+    "no-construct": true,
+    // debugger 禁止
+    "no-debugger": true,
+    // objectでkeyの重複禁止
+    "no-duplicate-key": true,
+    // 変数名かぶり禁止
+    "no-duplicate-variable": true,
+    // 空ブロック禁止
+    "no-empty": true,
+    // eval禁止
+    "no-eval": true,
+    // class外でのthis禁止 無効
+    "no-invalid-this": false,
+    // null禁止 無効
+    "no-null-keyword": false,
+    // 変数名かぶり禁止その2(こっちのほうがややこしい条件)
+    "no-shadowed-variable": true,
+    // 文字列でのオブジェクトアクセス禁止
+    "no-string-literal": false,
+    // case式brekaやreturn抜きで連発禁止 面倒なこともあるので無効
+    "no-switch-case-fall-through": false,
+    // returnより後ろなどのアクセスできないコード無効
+    "no-unreachable": true,
+    // 無意味な式を禁止
+    "no-unused-expression": true,
+    // 未使用の宣言やimportを禁止 ただしReactのimport文と先頭が_のものは例外とする
+    "no-unused-variable": [true,
+      "react",
+      { "ignore-pattern": "^_" }
+    ],
+    // 宣言前の変数利用を禁止
+    "no-use-before-declare": true,
+    // var禁止
+    "no-var-keyword": true,
+    // parseIntに進法指定必須
+    "radix": true,
+    // switch文にdefault必須
+    "switch-default": true,
+    // === !== で比較 ただしnullの場合は除く
+    "triple-equals": [true, "allow-null-check"],
+    // NaNを比較式に利用するのは禁止
+    "use-isnan": true,
+    // use-string必須 最近使わないので無効
+    "use-strict": false,
+
+    // Maintainability
+    // ファイル最後は改行
+    "eofline": true,
+    // インデントはspace
+    "indent": [true, "spaces"],
+    // 改行形式 LF
+    // "linebreak-style": [true, "LF"],
+    // 1ファイルあたりの行数 少なめにしておく
+    "max-line-length": [true, 200],
+    // export default禁止 無効
+    // 仕様が曖昧だからってことだと思うけど、まぁいい
+    "no-default-export": false,
+    // 同一ファイル内に同じnamespace禁止
+    // "no-mergable-namespace": true,
+    // require文禁止 普通に使いたくなることもあるので無効
+    "no-require-imports": false,
+    // 行末の半角スペース禁止
+    "no-trailing-whitespace": true,
+    // objectのkeyを順番に並べる 無効
+    "object-literal-sort-keys": false,
+    // 配列やobjectでカンマ必須
+    "trailing-comma": true,
+
+    // Style
+    // 縦の開始位置を揃える 無効
+    "align": false,
+    // クラスとインターフェースの名前はPascalCase
+    "class-name": true,
+    // コメント書式指定 無効
+    "comment-format": false,
+    // interfaceはIでスタート 無効
+    // C#書いてたのでIスタートでも個人的には違和感ないけどね
+    "interface-name": false,
+    // jsdoc書式
+    "jsdoc-format": true,
+    // newがいるときはつける
+    "new-parens": false,
+    //
+    "no-angle-bracket-type-assertion": false,
+    // 改行連発禁止
+    "no-consecutive-blank-lines": true,
+    // constructorにアクセス修飾子を禁止
+    "no-constructor-vars": true,
+    "one-line": [true,
+        // tryの閉じがcatchと同一行
+        "check-catch",
+        // tryまたはcatchの閉じがfinallyと同一行
+        "check-finally",
+        // ifの閉じがelseと同一行
+        "check-else",
+        // ifとかの開始括弧が同一業
+        "check-open-brace",
+        // 諸々のスペースが有ってほしい言葉の前にスペースが有る
+        "check-whitespace"
+    ],
+    // 1行で一気にたくさん宣言禁止
+    "one-variable-per-declaration": true,
+    // 文字列記号
+    // 基本シングル
+    // jsxはダブル
+    // "you don't quit" みたいに文字列中にシングル使うならダブルでOK
+    "quotemark": [true, "single", "jsx-double", "avoid-escape"],
+    // セミコロン必須
+    "semicolon": true,
+    // 変数名書式縛り reactの絡みで無効
+    "variable-name": false,
+    // 半角スペース入れるとこでは入れる
+    "whitespace": [true,
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-module",
+        "check-separator",
+        "check-type",
+        "check-typecast"
+    ]
+  }
+}

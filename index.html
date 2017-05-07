@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Basic Page Needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv="x-ua-compatible" content="IE=9" /><![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <link rel="stylesheet" type="text/css" href="css/main.css">
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+      <script type="text/javascript" src="js/lib/three.min.js"></script>
+      <script type="text/javascript" src="js/lib/stats.min.js"></script>
+      <script type="text/javascript" src="js/visualizer.js"></script>
+    <title>WebGLTest</title>
+  </head>
+  <body>
+    <div id="canvas-wrapper">
+    </div>
+    <div class="main"><!--
+    --><div id="canvas-spacer"></div>
+      <div id="main-music-console" class="music-console">
+
+        <audio src="sound/EzaOne - Supernova.mp3"></audio>
+
+        <div class="music-control-elements">
+          <div class="playback-controll  music-control-element">
+            <button class="play-button">
+              <span class="play-button-play glyphicon glyphicon-play"></span>
+              <span class="play-button-pause glyphicon glyphicon-pause" style="display:none;"></span>
+            </button>
+          </div>
+          <div class="playback-timeline-time-passed  music-control-element">
+            <span>0:00</span>
+          </div>
+          <div class="playback-timeline-area  music-control-element">
+            <input type="range" name="playback-timeline"  min="0" max="1" value="0" step="0.001">
+          </div>
+          <div class="playback-timeline-time-dulation  music-control-element">
+            <span>0:00</span>
+          </div>
+          <div class="playback-volume-controll-area music-control-element">
+            <input type="range" name="volume" min="0" max="1" step="0.01" value="0.5">
+          </div>
+          <div class="music-info music-control-element">
+            <span class="album-art"></span>
+            <div class="title-and-artist">
+              <span class="music-title">MUSIC_TITLE</span>
+              <span class="music-artist">MUSIC_ARTIST_NAME</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content-main-wrap">
+        <div class="content-main">
+          <br/><br/><br/>
+          <h1>Contents</h1>
+          <h2>Text</h2>
+          <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
+          <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
+          <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
+          <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
+          <h2>Licences</h2>
+          <p>EzaOne - Supernova: youtu.be/xZDYu5azS-c</p>
+          <iframe width="100%" height="300" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/234096967&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
+          <br/><br/>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
