@@ -1,9 +1,8 @@
-/// <reference path="../typings/index.d.ts" />
 
 $(window).on('load', () => {
 // $( () => {
   // $('audio').on('canplay', () => {
-    let visualizer = new GLAudioVisualizer.Main($('#canvas-wrapper')[0]);
+    let visualizer = new GLAudioVisualizer.GLAudioVisualizer($('#canvas-wrapper')[0]);
     visualizer.init();
 
       let audioController = visualizer.audioController;
@@ -62,12 +61,12 @@ $(window).on('load', () => {
       });
 
       audioController.volume = 0.5;
-      $('input[name="volume"]').on('change', () => {
+      $('input[name="volume"]').on('input', () => {
         audioController.volume = Number($('input[name="volume"]').val());
       });
 
       $('input[name="playback-timeline"]').on('change', () => {
-        let val = $('input[name="playback-timeline"]').val();
+        let val = Number($('input[name="playback-timeline"]').val());
         let d = audioController.duration;
 
         audioController.currentTime = d * val;
@@ -81,16 +80,3 @@ $(window).on('load', () => {
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
   }
 
-$(() => {
-  calcSpacerHeight();
-});
-
-$(window).on('resize', () => {
-  calcSpacerHeight();
-});
-
-function calcSpacerHeight() : void {
-  let canvasH = window.innerHeight;
-  let adjustY = $('#main-music-console').height();
-  $('#canvas-spacer').height(canvasH - adjustY);
-}

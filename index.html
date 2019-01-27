@@ -10,16 +10,28 @@
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
       <link rel="stylesheet" type="text/css" href="css/main.css">
       <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-      <script type="text/javascript" src="js/lib/three.min.js"></script>
+      <script type="text/javascript" src="./node_modules/three/build/three.min.js"></script>
       <script type="text/javascript" src="js/lib/stats.min.js"></script>
+      <!-- TODO: imports-loaderを使えばいちいちここにリンクを追加しなくていいらしい -->
+      <script type="text/javascript" src="./node_modules/dat.gui/build/dat.gui.min.js"></script>
+      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/EffectComposer.js"></script>
+      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/BloomPass.js"></script>
+      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/RenderPass.js"></script>
+      <script type="text/javascript" src="./node_modules/three/examples/js/shaders/CopyShader.js"></script>
+      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/ShaderPass.js"></script>
+      <script type="text/javascript" src="./node_modules/three/examples/js/shaders/LuminosityHighPassShader.js"></script>
+      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/UnrealBloomPass.js"></script>
+      <script type="text/javascript" src="./node_modules/three/examples/js/controls/OrbitControls.js"></script>
       <script type="text/javascript" src="js/visualizer.js"></script>
     <title>WebGLTest</title>
   </head>
   <body>
     <div id="canvas-wrapper">
     </div>
-    <div class="main"><!--
-    --><div id="canvas-spacer"></div>
+    <div id="loading-panel">
+      <span id="loading-text">Now Loading...</span>
+    </div>
+    <div class="main">
       <div id="main-music-console" class="music-console">
 
         <audio src="sound/EzaOne - Supernova.mp3"></audio>
@@ -44,27 +56,12 @@
             <input type="range" name="volume" min="0" max="1" step="0.01" value="0.5">
           </div>
           <div class="music-info music-control-element">
-            <span class="album-art"></span>
+            <span class="album-art"><img src="img/artworks-000136906876-7xoa1w-t500x500.jpg"></span>
             <div class="title-and-artist">
-              <span class="music-title">MUSIC_TITLE</span>
-              <span class="music-artist">MUSIC_ARTIST_NAME</span>
+              <span class="music-title">EzaOne - Supernova </span>
+              <span class="music-artist">Argofox</span>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="content-main-wrap">
-        <div class="content-main">
-          <br/><br/><br/>
-          <h1>Contents</h1>
-          <h2>Text</h2>
-          <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-          <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-          <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-          <p>テキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキストテキスト</p>
-          <h2>Licences</h2>
-          <p>EzaOne - Supernova: youtu.be/xZDYu5azS-c</p>
-          <iframe width="100%" height="300" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/234096967&amp;auto_play=false&amp;hide_related=false&amp;show_comments=true&amp;show_user=true&amp;show_reposts=false&amp;visual=true"></iframe>
-          <br/><br/>
         </div>
       </div>
     </div>

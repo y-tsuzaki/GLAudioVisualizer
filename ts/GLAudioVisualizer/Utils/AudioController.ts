@@ -9,14 +9,12 @@ namespace GLAudioVisualizer {
 
     private _init() : void {
       try {
-        // Fix up for prefixing
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
         this.context = new AudioContext();
         this.gainNode = this.context.createGain();
         this.gainNode.gain.value = 1.0;
         this.gainNode.connect(this.context.destination);
       } catch (e) {
-        //
+        throw e;
       }
     }
 
