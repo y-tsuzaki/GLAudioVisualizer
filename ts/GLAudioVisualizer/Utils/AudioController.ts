@@ -9,7 +9,7 @@ namespace GLAudioVisualizer {
 
     private _init() : void {
       try {
-        (<any>window).AudioContext = (<any>window).AudioContext | (<any>window).webkitAudioContext;
+        (<any>window).AudioContext = (<any>window).AudioContext || (<any>window).webkitAudioContext;
         this.context = new AudioContext();
         this.gainNode = this.context.createGain();
         this.gainNode.gain.value = 1.0;

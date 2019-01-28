@@ -270,7 +270,7 @@ var GLAudioVisualizer;
         }
         _init() {
             try {
-                window.AudioContext = window.AudioContext | window.webkitAudioContext;
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 this.context = new AudioContext();
                 this.gainNode = this.context.createGain();
                 this.gainNode.gain.value = 1.0;
