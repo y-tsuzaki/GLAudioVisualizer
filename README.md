@@ -1,7 +1,7 @@
 # GLAudioVisualizer
 THREE.jsでオーディオヴィジュアライザーを作るプロジェクト
 
-
+![Capture Image](https://raw.githubusercontent.com/wiki/y-tsuzaki/GLAudioVisualizer/images/Feb-02-2019%2015-07-37.gif) 
 
 ## TODO
 - ソースコードを綺麗に
