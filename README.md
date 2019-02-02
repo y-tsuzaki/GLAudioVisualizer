@@ -1,7 +1,13 @@
 # GLAudioVisualizer
 THREE.jsでオーディオヴィジュアライザーを作るプロジェクト
 
-![Capture Image](https://raw.githubusercontent.com/wiki/y-tsuzaki/GLAudioVisualizer/images/Feb-02-2019%2015-07-37.gif) 
+URL：[https://y-tsuzaki.github.io/GLAudioVisualizer/](https://y-tsuzaki.github.io/GLAudioVisualizer/)
+
+サポート端末: Chrome, Safari, Chrome(Android), Safari(iOS)
+
+![Capture Image](https://raw.githubusercontent.com/wiki/y-tsuzaki/GLAudioVisualizer/images/screencap.gif) 
+
+![Capture Image ios](https://raw.githubusercontent.com/wiki/y-tsuzaki/GLAudioVisualizer/images/screencap_ios.png)
 
 ## TODO
 - ソースコードを綺麗に
