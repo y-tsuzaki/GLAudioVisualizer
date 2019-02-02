@@ -9,6 +9,6 @@ THREE.jsでオーディオヴィジュアライザーを作るプロジェクト
 - オーディオコントロール部分のライブラリ化（もしくは、ライブラリの利用）
 - オーディオコントロール表示のブラッシュアップ
 
-## Licences
+## Licenses
 
 - Sound: EzaOne - Supernova: [youtu.be/xZDYu5azS-c](youtu.be/xZDYu5azS-c)
