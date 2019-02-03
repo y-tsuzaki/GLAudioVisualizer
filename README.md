@@ -1,5 +1,7 @@
 # GLAudioVisualizer
-THREE.jsでオーディオヴィジュアライザーを作るプロジェクト
+THREE.jsでオーディオヴィジュアライザーを作るプロジェクト。
+
+今後、いろんなビジュアライザーを作って、WebGLならではの面白い映像表現を実現したい。
 
 URL：[https://y-tsuzaki.github.io/GLAudioVisualizer/](https://y-tsuzaki.github.io/GLAudioVisualizer/)
 
