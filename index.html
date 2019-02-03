@@ -1,69 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- Basic Page Needs
+<head>
+  <!-- Basic Page Needs
     ================================================== -->
-    <meta charset="utf-8">
-    <!--[if IE]><meta http-equiv="x-ua-compatible" content="IE=9" /><![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-      <!-- Latest compiled and minified CSS -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-      <link rel="stylesheet" type="text/css" href="css/main.css">
-      <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-      <script type="text/javascript" src="./node_modules/three/build/three.min.js"></script>
-      <script type="text/javascript" src="js/lib/stats.min.js"></script>
-      <!-- TODO: imports-loaderを使えばいちいちここにリンクを追加しなくていいらしい -->
-      <script type="text/javascript" src="./node_modules/dat.gui/build/dat.gui.min.js"></script>
-      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/EffectComposer.js"></script>
-      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/BloomPass.js"></script>
-      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/RenderPass.js"></script>
-      <script type="text/javascript" src="./node_modules/three/examples/js/shaders/CopyShader.js"></script>
-      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/ShaderPass.js"></script>
-      <script type="text/javascript" src="./node_modules/three/examples/js/shaders/LuminosityHighPassShader.js"></script>
-      <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/UnrealBloomPass.js"></script>
-      <script type="text/javascript" src="./node_modules/three/examples/js/controls/OrbitControls.js"></script>
-      <script type="text/javascript" src="js/visualizer.js"></script>
-    <title>WebGLTest</title>
-  </head>
-  <body>
-    <div id="canvas-wrapper">
-    </div>
-    <div id="loading-panel">
-      <span id="loading-text">Now Loading...</span>
-    </div>
-    <div class="main">
-      <div id="main-music-console" class="music-console">
+  <meta charset="utf-8">
+  <!--[if IE]><meta http-equiv="x-ua-compatible" content="IE=9" /><![endif]-->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="./node_modules/three/build/three.min.js"></script>
+  <script type="text/javascript" src="js/lib/stats.min.js"></script>
+  <!-- TODO: imports-loaderを使えばいちいちここにリンクを追加しなくていいらしい -->
+  <script type="text/javascript" src="./node_modules/dat.gui/build/dat.gui.min.js"></script>
+  <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/EffectComposer.js"></script>
+  <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/BloomPass.js"></script>
+  <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/RenderPass.js"></script>
+  <script type="text/javascript" src="./node_modules/three/examples/js/shaders/CopyShader.js"></script>
+  <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/ShaderPass.js"></script>
+  <script type="text/javascript" src="./node_modules/three/examples/js/shaders/LuminosityHighPassShader.js"></script>
+  <script type="text/javascript" src="./node_modules/three/examples/js/postprocessing/UnrealBloomPass.js"></script>
+  <script type="text/javascript" src="./node_modules/three/examples/js/controls/OrbitControls.js"></script>
+  <script type="text/javascript" src="js/visualizer.js"></script>
+  <title>WebGLTest</title>
+</head>
 
-        <audio src="sound/EzaOne - Supernova.mp3"></audio>
+<body>
+  <div id="canvas-wrapper">
+  </div>
+  <div id="loading-panel">
+    <span id="loading-text">Now Loading...</span>
+  </div>
+  <div class="main">
+    <div id="main-music-console" class="music-console">
 
-        <div class="music-control-elements">
-          <div class="playback-controll  music-control-element">
-            <button class="play-button">
-              <span class="play-button-play glyphicon glyphicon-play"></span>
-              <span class="play-button-pause glyphicon glyphicon-pause" style="display:none;"></span>
-            </button>
-          </div>
-          <div class="playback-timeline-time-passed  music-control-element">
-            <span>0:00</span>
-          </div>
-          <div class="playback-timeline-area  music-control-element">
-            <input type="range" name="playback-timeline"  min="0" max="1" value="0" step="0.001">
-          </div>
-          <div class="playback-timeline-time-dulation  music-control-element">
-            <span>0:00</span>
-          </div>
-          <div class="playback-volume-controll-area music-control-element">
-            <input type="range" name="volume" min="0" max="1" step="0.01" value="0.5">
-          </div>
-          <div class="music-info music-control-element">
-            <span class="album-art"><img src="img/artworks-000136906876-7xoa1w-t500x500.jpg"></span>
-            <div class="title-and-artist">
-              <span class="music-title">EzaOne - Supernova </span>
-              <span class="music-artist">Argofox</span>
-            </div>
+      <audio src="sound/EzaOne - Supernova.mp3"></audio>
+
+      <div class="music-control-elements">
+        <div class="playback-controll  music-control-element">
+          <button class="play-button">
+            <span class="play-button-play glyphicon glyphicon-play"></span>
+            <span class="play-button-pause glyphicon glyphicon-pause" style="display:none;"></span>
+          </button>
+        </div>
+        <div class="playback-timeline-time-passed  music-control-element">
+          <span>0:00</span>
+        </div>
+        <div class="playback-timeline-area  music-control-element">
+          <input type="range" name="playback-timeline" min="0" max="1" value="0" step="0.001">
+        </div>
+        <div class="playback-timeline-time-dulation  music-control-element">
+          <span>0:00</span>
+        </div>
+        <div class="playback-volume-controll-area music-control-element">
+          <input type="range" name="volume" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="music-info music-control-element">
+          <span class="album-art"><img src="img/artworks-000136906876-7xoa1w-t500x500.jpg"></span>
+          <div class="title-and-artist">
+            <span class="music-title">EzaOne - Supernova </span>
+            <span class="music-artist">Argofox</span>
           </div>
         </div>
       </div>
     </div>
-  </body>
+  </div>
+</body>
+
 </html>
