@@ -77,6 +77,9 @@ class GLAudioVisualizer {
     get renderer() {
         return this._renderer;
     }
+    get audioController() {
+        return this._audioController;
+    }
     init() {
         this._renderer = new THREE.WebGLRenderer({ antialias: true });
         this._renderer.setClearColor(0x000011);
@@ -124,20 +127,18 @@ class GLAudioVisualizer {
         this._controls.target.set(0, 5, 0);
         let ambilLight = new THREE.AmbientLight(0xCCCCCC);
         this._scene.add(ambilLight);
-        this.graphMeshes = new Array();
-        this.graphMaterials = new Array();
+        this._graphMeshes = new Array();
         let length = 64;
-        this.graphMeshWrapper = new THREE.Object3D();
+        this._graphMeshWrapper = new THREE.Object3D();
         let meshW = 0.5;
         for (let i = 0; i < length; i++) {
             let material = new THREE.MeshPhongMaterial();
             let geometry = new THREE.CubeGeometry(meshW, 1, 2);
-            this.graphMeshes[i] = new THREE.Mesh(geometry, material);
-            this.graphMaterials[i] = material;
-            this.graphMeshes[i].position.set(i * (meshW * 2) - (length * (meshW * 2) / 2), 0, +2);
-            this.graphMeshWrapper.add(this.graphMeshes[i]);
+            this._graphMeshes[i] = new THREE.Mesh(geometry, material);
+            this._graphMeshes[i].position.set(i * (meshW * 2) - (length * (meshW * 2) / 2), 0, +2);
+            this._graphMeshWrapper.add(this._graphMeshes[i]);
         }
-        this._scene.add(this.graphMeshWrapper);
+        this._scene.add(this._graphMeshWrapper);
         let interval = 5;
         let max = 20;
         for (let i = 0; i < max + 1; i++) {
@@ -145,48 +146,46 @@ class GLAudioVisualizer {
             geometry.vertices.push(new THREE.Vector3(-interval * max / 2, 0, i * interval - (interval * max / 2)));
             geometry.vertices.push(new THREE.Vector3(+interval * max / 2, 0, i * interval - (interval * max / 2)));
             let line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x000077 }));
-            this.graphMeshWrapper.add(line);
+            this._graphMeshWrapper.add(line);
         }
         for (let i = 0; i < max + 1; i++) {
             let geometry = new THREE.Geometry();
             geometry.vertices.push(new THREE.Vector3(i * interval - (interval * max / 2), 0, -interval * max / 2));
             geometry.vertices.push(new THREE.Vector3(i * interval - (interval * max / 2), 0, +interval * max / 2));
             let line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x000077 }));
-            this.graphMeshWrapper.add(line);
-            this.graphMeshWrapper.position.setY(0.01);
+            this._graphMeshWrapper.add(line);
         }
         this.setResizeEvent();
         this.doUpdate();
         let soundUrl = 'sound/EzaOne - Supernova.mp3';
-        this.audioController = new AudioController();
-        this.audioController.loadSound(soundUrl, (buffer) => {
+        this._audioController = new AudioController();
+        this._audioController.loadSound(soundUrl, (buffer) => {
             $("#loading-panel").hide();
-            this.audioController.setBuffer(buffer);
-            let context = this.audioController.context;
-            let analyser = context.createAnalyser();
-            analyser.minDecibels = -100;
-            analyser.maxDecibels = -20;
-            this.analyser = analyser;
-            analyser.fftSize = 2048;
-            analyser.smoothingTimeConstant = 0.2;
+            this._audioController.setBuffer(buffer);
+            let context = this._audioController.context;
+            this._analyser = context.createAnalyser();
+            this._analyser.minDecibels = -100;
+            this._analyser.maxDecibels = -20;
+            this._analyser.fftSize = 1024;
+            this._analyser.smoothingTimeConstant = 0.2;
         });
-        this.audioController.onPlaying = () => {
-            let src = this.audioController.source;
-            src.connect(this.analyser);
+        this._audioController.onPlaying = () => {
+            let src = this._audioController.source;
+            src.connect(this._analyser);
         };
-        this.stats = new Stats();
-        document.body.appendChild(this.stats.dom);
+        this._stats = new Stats();
+        document.body.appendChild(this._stats.dom);
     }
     doUpdate() {
-        if (this.stats) {
-            this.stats.begin();
+        if (this._stats) {
+            this._stats.begin();
         }
-        if (!this.oldUpdateTime) {
-            this.oldUpdateTime = new Date().getTime();
+        if (!this._oldUpdateTime) {
+            this._oldUpdateTime = new Date().getTime();
         }
         let now = new Date().getTime();
-        let delta = now - this.oldUpdateTime;
-        this.oldUpdateTime = now;
+        let delta = now - this._oldUpdateTime;
+        this._oldUpdateTime = now;
         if (delta < 0) {
             throw new Error();
         }
@@ -207,22 +206,22 @@ class GLAudioVisualizer {
         };
         doUpdateSubRoutine(this._scene);
         this._composer.render();
-        if (this.stats) {
-            this.stats.end();
+        if (this._stats) {
+            this._stats.end();
         }
     }
     onUpdate(delta) {
-        let count = this.graphMeshes.length;
-        let data = new Uint8Array(count);
-        if (this.analyser) {
-            this.analyser.getByteFrequencyData(data);
+        let count = this._graphMeshes.length;
+        let frequencyData = new Uint8Array(count);
+        if (this._analyser) {
+            this._analyser.getByteFrequencyData(frequencyData);
         }
         for (let i = 0; i < count; ++i) {
-            let h = data[i] * 0.1 + 0.00001;
-            this.graphMeshes[i].scale.setY(h);
-            this.graphMeshes[i].position.setY(h / 2);
-            let color = new THREE.Color('hsl(' + (data[i] / 255 * 360) + ', 70%, ' + 50 + '%)').getHex();
-            (Object)(this.graphMaterials[i]).color.set(color);
+            let h = frequencyData[i] * 0.1 + 0.00001;
+            this._graphMeshes[i].scale.setY(h);
+            this._graphMeshes[i].position.setY(h / 2 + 0.001);
+            let color = new THREE.Color('hsl(' + (frequencyData[i] / 255 * 360) + ', 70%, ' + 50 + '%)').getHex();
+            this._graphMeshes[i].material.color.set(color);
         }
         this._controls.update();
     }
@@ -259,18 +258,6 @@ class AudioController {
         this._isStopped = true;
         this._init();
     }
-    _init() {
-        try {
-            window.AudioContext = window.AudioContext || window.webkitAudioContext;
-            this.context = new AudioContext();
-            this.gainNode = this.context.createGain();
-            this.gainNode.gain.value = 1.0;
-            this.gainNode.connect(this.context.destination);
-        }
-        catch (e) {
-            throw e;
-        }
-    }
     get isPlaying() {
         return !this._isStopped && !this._isPaused;
     }
@@ -283,11 +270,22 @@ class AudioController {
     get canPlay() {
         return this._currentBuffer != null;
     }
+    _init() {
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.context = new AudioContext();
+            this.gainNode = this.context.createGain();
+            this.gainNode.gain.value = 1.0;
+            this.gainNode.connect(this.context.destination);
+        }
+        catch (e) {
+            throw e;
+        }
+    }
     setBuffer(buffer) {
         this._currentBuffer = buffer;
     }
     loadSound(url, onLoad, onError) {
-        let data;
         let request = new XMLHttpRequest();
         request.open('GET', url, true);
         request.responseType = 'arraybuffer';
@@ -394,7 +392,5 @@ class AudioController {
         if (doResume) {
             this.resume();
         }
-    }
-    playSound(buffer) {
     }
 }
