@@ -83,12 +83,11 @@ class GLAudioVisualizer {
     init() {
         this._renderer = new THREE.WebGLRenderer({ antialias: true });
         this._renderer.setClearColor(0x000011);
-        var pixelRatio = window.devicePixelRatio;
         this._renderer.setSize(window.innerWidth, window.innerHeight);
+        var pixelRatio = window.devicePixelRatio;
         this._renderer.setPixelRatio(pixelRatio);
         this._renderer.toneMapping = THREE.ReinhardToneMapping;
         $(this._canvasWrapper).append(this._renderer.domElement);
-        this._composer = new THREE.EffectComposer(this._renderer);
         var params = {
             exposure: 1,
             bloomStrength: 1.0,
@@ -100,6 +99,8 @@ class GLAudioVisualizer {
         bloomPass.threshold = params.bloomThreshold;
         bloomPass.strength = params.bloomStrength;
         bloomPass.radius = params.bloomRadius;
+        this._scene = new THREE.Scene();
+        this._scene.fog = new THREE.FogExp2(0x000022, 0.002);
         let fov = 60;
         let near = 1;
         let far = 1000;
@@ -111,9 +112,8 @@ class GLAudioVisualizer {
             this._camera.aspect = aspect;
             this._camera.updateProjectionMatrix();
         };
-        this._scene = new THREE.Scene();
-        this._scene.fog = new THREE.FogExp2(0x000022, 0.002);
         var renderPass = new THREE.RenderPass(this._scene, this._camera);
+        this._composer = new THREE.EffectComposer(this._renderer);
         this._composer.setSize(window.innerWidth, window.innerHeight);
         this._composer.addPass(renderPass);
         this._composer.addPass(bloomPass);
@@ -155,8 +155,6 @@ class GLAudioVisualizer {
             let line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x000077 }));
             this._graphMeshWrapper.add(line);
         }
-        this.setResizeEvent();
-        this.doUpdate();
         let soundUrl = 'sound/EzaOne - Supernova.mp3';
         this._audioController = new AudioController();
         this._audioController.loadSound(soundUrl, (buffer) => {
@@ -175,6 +173,8 @@ class GLAudioVisualizer {
         };
         this._stats = new Stats();
         document.body.appendChild(this._stats.dom);
+        this._setResizeEvent();
+        this.doUpdate();
     }
     doUpdate() {
         if (this._stats) {
@@ -225,7 +225,7 @@ class GLAudioVisualizer {
         }
         this._controls.update();
     }
-    setResizeEvent() {
+    _setResizeEvent() {
         let doResizeSubRoutine = (obj, width, height) => {
             if (obj['onResized'] instanceof Function) {
                 obj['onResized'](width, height);
