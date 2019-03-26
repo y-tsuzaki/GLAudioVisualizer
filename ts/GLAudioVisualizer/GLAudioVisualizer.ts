@@ -31,18 +31,12 @@ class GLAudioVisualizer {
     // init renderer
     this._renderer = new THREE.WebGLRenderer({ antialias: true });
     this._renderer.setClearColor(0x000011);
-    var pixelRatio = window.devicePixelRatio;
     this._renderer.setSize(window.innerWidth, window.innerHeight);
-
+    var pixelRatio = window.devicePixelRatio;
     this._renderer.setPixelRatio(pixelRatio);
     this._renderer.toneMapping = THREE.ReinhardToneMapping;
 
     $(this._canvasWrapper).append(this._renderer.domElement);
-
-
-
-    this._composer = new THREE.EffectComposer(this._renderer);
-
 
     var params = {
       exposure: 1,
@@ -55,6 +49,10 @@ class GLAudioVisualizer {
     bloomPass.threshold = params.bloomThreshold;
     bloomPass.strength = params.bloomStrength;
     bloomPass.radius = params.bloomRadius;
+    
+    this._scene = new THREE.Scene();
+    this._scene.fog = new THREE.FogExp2(0x000022, 0.002);
+
 
     // init camera
     let fov = 60;
@@ -68,49 +66,28 @@ class GLAudioVisualizer {
       this._camera.aspect = aspect;
       this._camera.updateProjectionMatrix();
     };
-    //init scene
-    this._scene = new THREE.Scene();
-    this._scene.fog = new THREE.FogExp2(0x000022, 0.002);
-
     var renderPass = new THREE.RenderPass(this._scene, this._camera);
-
+    
+    this._composer = new THREE.EffectComposer(this._renderer);
     this._composer.setSize(window.innerWidth, window.innerHeight);
     this._composer.addPass(renderPass);
     this._composer.addPass(bloomPass);
 
-    // init GUI 
-    // var gui = new dat.GUI();
-    // gui.add(params, 'exposure', 0.1, 2).onChange(function (value) {
-    //   this._renderer.toneMappingExposure = Math.pow(value, 4.0);
-    // });
-    // gui.add(params, 'bloomThreshold', 0.0, 1.0).onChange(function (value) {
-    //   bloomPass.threshold = Number(value);
-    // });
-    // gui.add(params, 'bloomStrength', 0.0, 3.0).onChange(function (value) {
-    //   bloomPass.strength = Number(value);
-    // });
-    // gui.add(params, 'bloomRadius', 0.0, 1.0).step(0.01).onChange(function (value) {
-    //   bloomPass.radius = Number(value);
-    // });
-
-    //set OrbitControls
-    // controls
+    // init OrbitControls
     this._controls = new THREE.OrbitControls(this._camera, this._renderer.domElement);
-    this._controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+    this._controls.enableDamping = true;
     this._controls.dampingFactor = 0.25;
     this._controls.screenSpacePanning = false;
     this._controls.minDistance = 10;
     this._controls.maxDistance = 500;
     this._controls.maxPolarAngle = Math.PI / 2;
-
     this._controls.target.set(0, 5, 0);
 
-    //init light
-
+    // init light
     let ambilLight = new THREE.AmbientLight(0xCCCCCC);
     this._scene.add(ambilLight);
 
-    //init graph object
+    // init graph object
     this._graphMeshes = new Array();
     let length = 64;
     this._graphMeshWrapper = new THREE.Object3D();
@@ -124,33 +101,23 @@ class GLAudioVisualizer {
     }
     this._scene.add(this._graphMeshWrapper);
 
-    //add grid line
+    // init grid line
     let interval = 5;
     let max = 20;
     for (let i = 0; i < max + 1; i++) {
-      //頂点座標の追加
       let geometry = new THREE.Geometry();
       geometry.vertices.push(new THREE.Vector3(-interval * max / 2, 0, i * interval - (interval * max / 2)));
       geometry.vertices.push(new THREE.Vector3(+interval * max / 2, 0, i * interval - (interval * max / 2)));
-
-      //線オブジェクトの生成
       let line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x000077 }));
-      //sceneにlineを追加
       this._graphMeshWrapper.add(line);
     }
     for (let i = 0; i < max + 1; i++) {
-      //頂点座標の追加
       let geometry = new THREE.Geometry();
       geometry.vertices.push(new THREE.Vector3(i * interval - (interval * max / 2), 0, -interval * max / 2));
       geometry.vertices.push(new THREE.Vector3(i * interval - (interval * max / 2), 0, +interval * max / 2));
-      //線オブジェクトの生成
       let line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color: 0x000077 }));
-      //sceneにlineを追加
       this._graphMeshWrapper.add(line);
     }
-
-    this.setResizeEvent();
-    this.doUpdate();
 
     let soundUrl = 'sound/EzaOne - Supernova.mp3';
     this._audioController = new AudioController();
@@ -170,9 +137,13 @@ class GLAudioVisualizer {
       src.connect(this._analyser);
     };
 
-    // Stats
+
+    // init Stats
     this._stats = new Stats();
     document.body.appendChild(this._stats.dom);
+    
+    this._setResizeEvent();
+    this.doUpdate();
   }
 
   public doUpdate(): void {
@@ -235,7 +206,7 @@ class GLAudioVisualizer {
     this._controls.update();
   }
 
-  private setResizeEvent(): void {
+  private _setResizeEvent(): void {
     let doResizeSubRoutine = (obj: THREE.Object3D, width: number, height: number) => {
       if (obj['onResized'] instanceof Function) {
         obj['onResized'](width, height);
